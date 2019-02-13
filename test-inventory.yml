@@ -1,0 +1,32 @@
+---
+docker_machines:
+  hosts:
+    myvm1:
+      ansible_host: 192.168.99.100
+      ansible_port: 22
+      ansible_user: docker
+      ansible_ssh_private_key_file: "/home/thilinamad/.docker/machine/machines/myvm1/id_rsa"
+    myvm2:
+      ansible_host: 192.168.99.102
+      ansible_port: 22
+      ansible_user: docker
+      ansible_ssh_private_key_file: "/home/thilinamad/.docker/machine/machines/myvm2/id_rsa"
+  vars:
+    hello_message: "Hello World!, docker_machines"
+    docker_group: "docker"
+    lsb_release: "bionic"
+
+ubuntu_servers:
+  hosts:
+    ubu-server-1:
+      ansible_host: 192.168.1.40
+      ansible_port: 22
+      ansible_user: enactor
+      ansible_ssh_private_key_file: "/home/thilinamad/.ssh/id_rsa"
+      ansible_become_user: root
+      ansible_become_pass: enactor  # TODO instead of keepin plain-text use a vault here.
+  vars:
+    hello_message: "Hello World!, ubuntu_servers"
+    docker_group: "docker"
+    lsb_release: "bionic"
+...

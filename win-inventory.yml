@@ -1,0 +1,42 @@
+---
+windows_servers:
+  hosts:
+    win-server-1:
+      ansible_host: 192.168.1.47
+      ansible_port: 5986   # 5986 is HTTPS where 5985 is HTTP. powershell "winrm enumerate winrm/config/Listener" will give the details.
+      ansible_user: Administrator
+      ansible_password: enactor@123
+      ansible_connection: winrm
+      ansible_winrm_transport: ntlm
+      # URL prefix to listen on, by default it is wsman. 
+      # If this is changed, the host var ansible_winrm_path must be set to the same value.
+      ansible_winrm_path: wsman
+      # WinRM connection plugin defaults to communicating via https, 
+      # but it supports different modes like message-encrypted http. 
+      # Since the “Configure Remoting for Ansible” script we ran earlier set things up with the self-signed cert, 
+      # we need to tell Python, “Don’t try to validate this certificate because it’s not going to be from a valid CA.”
+      ansible_winrm_server_cert_validation: ignore 
+  vars:
+    hello_message: "Hello World!, windows_servers"
+    docker_compose_version: "1.24.0-rc1"
+
+cloud_windows_servers:
+  hosts:
+    win-server-2:
+      ansible_host: 3.84.252.106
+      ansible_port: 5986   # 5986 is HTTPS where 5985 is HTTP. powershell "winrm enumerate winrm/config/Listener" will give the details.
+      ansible_user: Administrator
+      ansible_password: myTempPassword123!
+      ansible_connection: winrm
+      # URL prefix to listen on, by default it is wsman. 
+      # If this is changed, the host var ansible_winrm_path must be set to the same value.
+      ansible_winrm_path: wsman
+      # WinRM connection plugin defaults to communicating via https, 
+      # but it supports different modes like message-encrypted http. 
+      # Since the “Configure Remoting for Ansible” script we ran earlier set things up with the self-signed cert, 
+      # we need to tell Python, “Don’t try to validate this certificate because it’s not going to be from a valid CA.”
+      ansible_winrm_server_cert_validation: ignore 
+  vars:
+    hello_message: "Hello World!, cloud_windows_servers"
+    docker_compose_version: "1.24.0"
+...

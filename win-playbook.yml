@@ -1,0 +1,45 @@
+---
+- name: example play to run on a Windows server
+  hosts: windows_servers
+  tasks:
+  - name: Enable Windows Container Feature
+    win_feature:
+      name: Containers
+      state: present
+    register: dockerwindowsfeature
+
+  - name: Reboot server if Windows Container Feature requires it
+    win_reboot:
+    when: dockerwindowsfeature.reboot_required
+
+  - name: Add DockerMsftProviderInsider powershell module repository
+    win_psmodule:
+      name: DockerMsftProviderInsider
+      state: present
+
+  - name: Install Docker package
+    win_shell: Install-Package –ProviderName "DockerMsftProviderInsider" -Name "Docker" -Force
+    args:
+      creates: "C:\\Program Files\\Docker\\metadata.json"
+    register: dockerinstall
+
+  - name: Reboot server if Docker package requires it
+    win_reboot:
+    when: dockerinstall.changed
+
+  - name: Start docker service   #Start-Service docker
+    win_service:
+      name: docker
+      state: started
+      start_mode: auto
+
+  - name: Install Docker Compose package
+    win_chocolatey:
+      name: docker-compose
+      state: present
+    register: dockercomposeinstall
+
+  - name: Reboot server if Docker Compose package requires it
+    win_reboot:
+    when: dockercomposeinstall.changed
+...
